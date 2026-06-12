@@ -1,5 +1,7 @@
 package com.project.helpdesk.service;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -37,5 +39,13 @@ public class TicketService {
 		else {
 			return ticketRepo.save(ticket);
 		}
+	}
+	
+	public void deleteTicket(Long id) throws Exception {
+		Optional<Ticket> ticket = ticketRepo.findById(id);
+		if(ticket==null) {
+			throw new Exception("Ticket doesn't exists");
+		}
+		ticketRepo.deleteById(id);
 	}
 }
