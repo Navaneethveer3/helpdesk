@@ -6,9 +6,12 @@ import org.springframework.stereotype.Service;
 import com.project.helpdesk.models.Ticket;
 import com.project.helpdesk.repository.TicketRepo;
 
+import jakarta.transaction.Transactional;
+
 
 
 @Service
+@Transactional
 public class TicketService {
 	
 	@Autowired

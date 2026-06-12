@@ -34,5 +34,14 @@ class TicketServiceTests {
 		assertEquals(ticket.getPriority(), expectedTicket.getPriority());
 		assertEquals(ticket.getStatus(), expectedTicket.getStatus());
 	}
-
+	
+	@Test
+	void getTicketByUsername() {
+		Ticket ticket1 = this.ticketService.getTicketByUsername("Tester");
+		Ticket ticket2 = this.ticketService.getTicketByUsername("Unit Tester");
+		Ticket ticket3 = this.ticketService.getTicketByUsername("Developer");
+		assertNotNull(ticket1);
+		assertNotNull(ticket2);
+		assertNull(ticket3);
+	}
 }
