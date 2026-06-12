@@ -8,6 +8,5 @@ import com.project.helpdesk.models.Ticket;
 
 public interface TicketRepo extends JpaRepository<Ticket, Long> {
 	
-	Optional<Ticket> findByTicketId(Long ticketId);
 	Optional<Ticket> findByUsername(String username);
 }
