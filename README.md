@@ -4,3 +4,4 @@
 **Features :**
 - Ticket creation.
 - Ticket resolving with AI.
+- Stores the user conversation.
