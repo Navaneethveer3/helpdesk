@@ -19,7 +19,7 @@ class AiServiceTests {
 	@Test
 	void chat() {
 		String query = "What is the full form of DSA in computer science?";
-		String response = this.service.getResponseFromAssistant(query);
+		String response = this.service.getResponseFromAssistant(query, "tester");
 		System.out.println(response);
 	}
 

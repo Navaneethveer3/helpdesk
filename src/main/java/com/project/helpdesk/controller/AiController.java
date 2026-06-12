@@ -18,7 +18,7 @@ public class AiController {
 	private AiService service;
 	
 	@GetMapping("/chat")
-	public ResponseEntity<String> getReponse(@RequestParam("query") String query){
-		return new ResponseEntity<>(service.getResponseFromAssistant(query), HttpStatus.OK);
+	public ResponseEntity<String> getReponse(@RequestParam("query") String query, @RequestParam("userId") String userId){
+		return new ResponseEntity<>(service.getResponseFromAssistant(query,"user"), HttpStatus.OK);
 	}
 }
