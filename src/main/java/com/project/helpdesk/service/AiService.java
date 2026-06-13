@@ -28,7 +28,7 @@ public class AiService {
 		Advisor retrievalAugmentationadvisor = RetrievalAugmentationAdvisor
 							.builder()
 							.documentRetriever(VectorStoreDocumentRetriever.builder()
-									.similarityThreshold(0.75)
+									.similarityThreshold(0.5)
 									.topK(3)
 									.vectorStore(this.vectorStore)
 									.build()
@@ -39,10 +39,9 @@ public class AiService {
 		
 		return this.chatClient
 				.prompt()
-				.system("You are a helpful customer support assistant. Only use tools when absolutely necessary. Once you have the information you need or have completed the action, DO NOT call the tool again. Just return your final text answer to the user.")
 				.advisors(a->a.param(ChatMemory.CONVERSATION_ID, userId))
-				.advisors()
-				.tools(ticketDatabaseTool)
+				.advisors(retrievalAugmentationadvisor)
+//				.tools(ticketDatabaseTool)
 				.user(user -> user.text(query))
 				.call()
 				.content();
