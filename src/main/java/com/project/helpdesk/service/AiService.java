@@ -28,7 +28,7 @@ public class AiService {
 		Advisor retrievalAugmentationadvisor = RetrievalAugmentationAdvisor
 							.builder()
 							.documentRetriever(VectorStoreDocumentRetriever.builder()
-									.similarityThreshold(0.5)
+									.similarityThreshold(0.75)
 									.topK(3)
 									.vectorStore(this.vectorStore)
 									.build()

@@ -21,12 +21,12 @@ class DocumentReaderServiceTests {
 	@Autowired
 	private AiService aiService;
 	
-//	@Test
-//	void checkLoadDocument() {
-//		List<Document> docs = this.docService.loadDocument();
-//		assertNotNull(docs);
-//		docs.stream().forEach(item->System.out.println(item));
-//	}
+	@Test
+	void checkLoadDocument() {
+		List<Document> docs = this.docService.loadDocument();
+		assertNotNull(docs);
+		docs.stream().forEach(item->System.out.println(item));
+	}
 	
 	@Test
 	void checkRag() {
