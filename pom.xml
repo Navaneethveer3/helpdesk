@@ -94,6 +94,10 @@
 		    <groupId>org.springframework.ai</groupId>
 		    <artifactId>spring-ai-tool-search-advisor</artifactId>
 		</dependency>
+		<dependency>
+		    <groupId>org.springframework.ai</groupId>
+		    <artifactId>spring-ai-tika-document-reader</artifactId>
+		</dependency>
 	</dependencies>
 	<dependencyManagement>
 		<dependencies>
