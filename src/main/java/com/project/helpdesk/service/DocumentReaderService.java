@@ -16,13 +16,13 @@ import org.springframework.ai.reader.tika.TikaDocumentReader;
 public class DocumentReaderService {
 
 	@Value("classpath:Spring Boot.pdf")
-	private Resource resource;
+	private Resource localResource;
 	
 	@Autowired
 	private VectorStore vectorStore;
 
-	public List<Document> loadDocument(){
-		TikaDocumentReader reader = new TikaDocumentReader(this.resource);
+	public List<Document> loadDocument(Resource resource){
+		TikaDocumentReader reader = new TikaDocumentReader(resource);
 		TokenTextSplitter splitter = new TokenTextSplitter(500, 100, 100, 10000, true, List.of('.', '?', '!', '\n'));
 		List<Document> transformed = splitter.apply(reader.read());
 		vectorStore.add(transformed);
