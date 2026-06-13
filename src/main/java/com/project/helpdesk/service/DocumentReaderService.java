@@ -23,9 +23,9 @@ public class DocumentReaderService {
 
 	public List<Document> loadDocument(){
 		TikaDocumentReader reader = new TikaDocumentReader(this.resource);
-		TokenTextSplitter splitter = new TokenTextSplitter();
+		TokenTextSplitter splitter = new TokenTextSplitter(500, 100, 100, 10000, true, List.of('.', '?', '!', '\n'));
 		List<Document> transformed = splitter.apply(reader.read());
-		vectorStore.write(transformed);
+		vectorStore.add(transformed);
 		return transformed;
 	}
 }
