@@ -1,7 +1,11 @@
 package com.project.helpdesk.service;
 
 import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.ai.chat.client.advisor.api.Advisor;
 import org.springframework.ai.chat.memory.ChatMemory;
+import org.springframework.ai.rag.advisor.RetrievalAugmentationAdvisor;
+import org.springframework.ai.rag.retrieval.search.VectorStoreDocumentRetriever;
+import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,12 +19,29 @@ public class AiService {
 
 	@Autowired
 	private TicketDatabaseTool ticketDatabaseTool;
+	
+	@Autowired
+	private VectorStore vectorStore;
 
 	public String getResponseFromAssistant(String query, String userId) {
+		
+		Advisor retrievalAugmentationadvisor = RetrievalAugmentationAdvisor
+							.builder()
+							.documentRetriever(VectorStoreDocumentRetriever.builder()
+									.similarityThreshold(0.75)
+									.topK(3)
+									.vectorStore(this.vectorStore)
+									.build()
+									)
+							.build();
+		
+		
+		
 		return this.chatClient
 				.prompt()
 				.system("You are a helpful customer support assistant. Only use tools when absolutely necessary. Once you have the information you need or have completed the action, DO NOT call the tool again. Just return your final text answer to the user.")
 				.advisors(a->a.param(ChatMemory.CONVERSATION_ID, userId))
+				.advisors()
 				.tools(ticketDatabaseTool)
 				.user(user -> user.text(query))
 				.call()
