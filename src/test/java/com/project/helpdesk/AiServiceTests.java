@@ -8,6 +8,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import com.project.helpdesk.service.AiService;
 
+import reactor.core.publisher.Flux;
+
 
 @SpringBootTest
 class AiServiceTests {
@@ -19,7 +21,7 @@ class AiServiceTests {
 	@Test
 	void chat() {
 		String query = "What is the full form of DSA in computer science?";
-		String response = this.service.getResponseFromAssistant(query, "tester");
+		Flux<String> response = this.service.getResponseFromAssistant(query, "tester");
 		System.out.println(response);
 	}
 

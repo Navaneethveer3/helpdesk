@@ -10,7 +10,8 @@ const ChatbotWindow = ({ userId = 'defaultUser' }) => {
   ]);
   const [input, setInput] = useState('');
   const [attachedFile, setAttachedFile] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [isThinking, setIsThinking] = useState(false);
   const fileInputRef = useRef(null);
   const messagesEndRef = useRef(null);
 
@@ -20,7 +21,7 @@ const ChatbotWindow = ({ userId = 'defaultUser' }) => {
 
   useEffect(() => {
     scrollToBottom();
-  }, [messages, isLoading]);
+  }, [messages, isThinking]);
 
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -44,7 +45,8 @@ const ChatbotWindow = ({ userId = 'defaultUser' }) => {
     
     setInput('');
     setAttachedFile(null);
-    setIsLoading(true);
+    setIsGenerating(true);
+    setIsThinking(true);
 
     try {
       if (currentFile) {
@@ -52,15 +54,30 @@ const ChatbotWindow = ({ userId = 'defaultUser' }) => {
         await aiService.uploadDocument(currentFile);
       }
       
-      // Then send the prompt (the backend now has RAG configured to read the vector store)
+      // Add empty system message placeholder for the stream
+      setMessages(prev => [...prev, { role: 'system', content: '' }]);
+
       const promptToSend = currentFile ? `[Attached: ${currentFile.name}] ${userMessage}` : userMessage;
-      const response = await aiService.chat(promptToSend, userId);
-      setMessages(prev => [...prev, { role: 'system', content: response }]);
+      
+      await aiService.chatStream(promptToSend, userId, (chunk) => {
+        setIsThinking(false); // Hide thinking dots when data arrives
+        setMessages(prev => {
+          const newMessages = [...prev];
+          const lastIndex = newMessages.length - 1;
+          newMessages[lastIndex] = {
+            ...newMessages[lastIndex],
+            content: newMessages[lastIndex].content + chunk
+          };
+          return newMessages;
+        });
+      });
     } catch (error) {
       console.error(error);
+      setIsThinking(false);
       setMessages(prev => [...prev, { role: 'system', content: 'Sorry, I encountered an error. Please try again later.' }]);
     } finally {
-      setIsLoading(false);
+      setIsGenerating(false);
+      setIsThinking(false);
       if (fileInputRef.current) fileInputRef.current.value = '';
     }
   };
@@ -86,7 +103,7 @@ const ChatbotWindow = ({ userId = 'defaultUser' }) => {
             </div>
           </div>
         ))}
-        {isLoading && (
+        {isThinking && (
           <div className="message-row bot">
             <div className="avatar">
               <Bot size={20} />
@@ -117,7 +134,7 @@ const ChatbotWindow = ({ userId = 'defaultUser' }) => {
             type="button" 
             className="attach-btn" 
             onClick={() => fileInputRef.current?.click()}
-            disabled={isLoading}
+            disabled={isGenerating}
             title="Attach Document"
           >
             <Paperclip size={20} />
@@ -136,10 +153,10 @@ const ChatbotWindow = ({ userId = 'defaultUser' }) => {
             placeholder="Type your message here..."
             value={input}
             onChange={(e) => setInput(e.target.value)}
-            disabled={isLoading}
+            disabled={isGenerating}
           />
           
-          <button type="submit" className="send-btn" disabled={isLoading || (!input.trim() && !attachedFile)}>
+          <button type="submit" className="send-btn" disabled={isGenerating || (!input.trim() && !attachedFile)}>
             <Send size={18} style={{ marginLeft: '-2px' }} />
           </button>
         </form>

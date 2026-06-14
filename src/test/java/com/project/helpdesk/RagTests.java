@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import com.project.helpdesk.service.AiService;
+
+import reactor.core.publisher.Flux;
 	
 @SpringBootTest
 class RagTests {
@@ -32,7 +34,7 @@ class RagTests {
 	@Test
 	void checkRag() {
 		String query = "Tell where do the java is used?";
-		String response = this.aiService.getResponseFromAssistant(query, "tester");
+		Flux<String> response = this.aiService.getResponseFromAssistant(query, "tester");
 		assertNotNull(response);
 		System.out.println(response);
 	}

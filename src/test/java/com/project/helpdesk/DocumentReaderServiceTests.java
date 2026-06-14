@@ -12,6 +12,8 @@ import org.springframework.boot.test.context.SpringBootTest;
 import com.project.helpdesk.service.AiService;
 import com.project.helpdesk.service.DocumentReaderService;
 
+import reactor.core.publisher.Flux;
+
 @SpringBootTest
 class DocumentReaderServiceTests {
 
@@ -31,7 +33,7 @@ class DocumentReaderServiceTests {
 	@Test
 	void checkRag() {
 		String prompt = "Explain about API Security and OAuth2?";
-		String response = this.aiService.getResponseFromAssistant(prompt, "tester");
+		Flux<String> response = this.aiService.getResponseFromAssistant(prompt, "tester");
 		assertNotNull(response);
 		System.out.println(response);
 	}

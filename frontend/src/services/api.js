@@ -57,6 +57,51 @@ export const aiService = {
     return response.text();
   },
 
+  chatStream: async (query, userId, onChunk) => {
+    const url = new URL('http://localhost:8080/ai/chat');
+    url.searchParams.append('query', query);
+    url.searchParams.append('userId', userId);
+    
+    const response = await fetch(url.toString(), {
+      headers: { 'Accept': 'text/event-stream' }
+    });
+
+    if (!response.ok) throw new Error('Failed to fetch AI response');
+
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder('utf-8');
+    let buffer = '';
+    let eventData = [];
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) {
+        if (eventData.length > 0) onChunk(eventData.join('\n'));
+        break;
+      }
+
+      buffer += decoder.decode(value, { stream: true });
+      const lines = buffer.split('\n');
+      buffer = lines.pop() || ''; // Keep the incomplete line
+
+      for (let line of lines) {
+        line = line.replace(/\r$/, ''); // Handle \r\n endings
+        
+        if (line.startsWith('data:')) {
+          eventData.push(line.slice(5));
+        } else if (line === '') {
+          // Empty line signifies end of the event
+          if (eventData.length > 0) {
+            let chunk = eventData.join('\n');
+            chunk = chunk.replace(/\\n/g, '\n');
+            onChunk(chunk);
+            eventData = [];
+          }
+        }
+      }
+    }
+  },
+
   uploadDocument: async (file) => {
     const formData = new FormData();
     formData.append('file', file);

@@ -5,6 +5,8 @@ import org.springframework.ai.chat.memory.ChatMemory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import reactor.core.publisher.Flux;
+
 
 @Service
 public class AiService {
@@ -13,7 +15,7 @@ public class AiService {
 	private ChatClient chatClient;
 
 
-	public String getResponseFromAssistant(String query, String userId) {
+	public Flux<String> getResponseFromAssistant(String query, String userId) {
 		
 		return this.chatClient
 				.prompt()
@@ -25,7 +27,7 @@ public class AiService {
 						"If the user mentions an attached document but no specific topic, extract the topic from the document name and search for it.")
 				.advisors(a->a.param(ChatMemory.CONVERSATION_ID, userId))
 				.user(user -> user.text(query))
-				.call()
+				.stream()
 				.content();
 	}
 }
