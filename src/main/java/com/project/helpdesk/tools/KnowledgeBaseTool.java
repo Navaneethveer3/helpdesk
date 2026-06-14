@@ -22,7 +22,7 @@ public class KnowledgeBaseTool {
             @ToolParam(description = "The specific search query or topic to look up (e.g. 'Spring Boot questions', 'HR policy')") String query,
             @ToolParam(description = "the maximum number of results to return, e.g. 5, 10. Default is 3", required = false) Integer maxResults) {
         
-        int topK = (maxResults != null && maxResults > 0) ? maxResults : 3;
+        int topK = (maxResults != null && maxResults > 0) ? maxResults : 1;
 
         List<Document> results = vectorStore.similaritySearch(
             SearchRequest.builder()
