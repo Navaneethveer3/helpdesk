@@ -11,8 +11,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.project.helpdesk.service.DocumentReaderService;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
+
 @RestController
 @RequestMapping("/docs")
+@CrossOrigin(origins = "*")
 public class DocumentReaderController {
 	
 	@Autowired

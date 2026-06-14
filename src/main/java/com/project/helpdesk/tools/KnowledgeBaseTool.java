@@ -17,26 +17,31 @@ public class KnowledgeBaseTool {
     @Autowired
     private VectorStore vectorStore;
 
-    @Tool(description = "Search the knowledge base for documentation, guides, or general information. Use this tool when the user asks a question about a concept or how something works.")
-    public String searchKnowledgeBase(@ToolParam(description = "The question or search query to look up in the knowledge base") String query) {
+    @Tool(description = "Search the knowledge base for answers, topics, or document contents. Always use this when the user asks questions about an attached document or general topic.")
+    public String searchKnowledgeBase(
+            @ToolParam(description = "The specific search query or topic to look up (e.g. 'Spring Boot questions', 'HR policy')") String query,
+            @ToolParam(description = "the maximum number of results to return, e.g. 5, 10. Default is 3", required = false) Integer maxResults) {
         
-        // Search the vector store for the query
+        int topK = (maxResults != null && maxResults > 0) ? maxResults : 1;
+
         List<Document> results = vectorStore.similaritySearch(
             SearchRequest.builder()
                 .query(query)
-                .topK(3)
-                .similarityThreshold(0.75) // You can adjust or remove this!
+                .topK(topK)
+//                .similarityThreshold(0.75) 
                 .build()
         );
 
-        // If nothing found, return a message saying so
         if (results == null || results.isEmpty()) {
             return "No relevant information found in the knowledge base for this query.";
         }
 
-        // Combine the text of all matching documents into a single string
         return results.stream()
-                .map(Document::getText)
+                .map(doc->{
+                	String source = (String) doc.getMetadata().getOrDefault("source", "unknown document");
+                	return "[source document: "+source+"]\n"+doc.getText();
+                })
                 .collect(Collectors.joining("\n\n---\n\n"));
     }
+    
 }

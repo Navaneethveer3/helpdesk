@@ -26,6 +26,10 @@ public class TicketService {
 	public Ticket getTicketById(Long ticketId) {
 		return ticketRepo.findById(ticketId).orElse(null);
 	}
+	
+	public Iterable<Ticket> getAllTickets() {
+		return ticketRepo.findAll();
+	}
 
 	public Ticket getTicketByUsername(String username) {
 		return ticketRepo.findByUsername(username).orElse(null);
@@ -57,8 +61,8 @@ public class TicketService {
 
 	public void deleteTicket(Long id) throws Exception {
 		Optional<Ticket> ticket = ticketRepo.findById(id);
-		if (ticket == null) {
-			throw new Exception("Ticket doesn't exists");
+		if (ticket.isEmpty()) {
+			throw new Exception("Ticket doesn't exist");
 		}
 		ticketRepo.deleteById(id);
 	}
