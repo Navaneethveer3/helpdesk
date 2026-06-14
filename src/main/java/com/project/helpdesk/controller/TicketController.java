@@ -15,8 +15,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.project.helpdesk.models.Ticket;
 import com.project.helpdesk.service.TicketService;
 
+import org.springframework.web.bind.annotation.CrossOrigin;
+
 @RestController
 @RequestMapping("/ticket")
+@CrossOrigin(origins = "*")
 public class TicketController {
 	
 	@Autowired
@@ -30,6 +33,11 @@ public class TicketController {
 	@GetMapping("/id/{id}")
 	public ResponseEntity<Ticket> getTicketById(@PathVariable Long id){
 		return new ResponseEntity<>(this.ticketService.getTicketById(id), HttpStatus.OK);
+	}
+	
+	@GetMapping("/all")
+	public ResponseEntity<Iterable<Ticket>> getAllTickets(){
+		return new ResponseEntity<>(this.ticketService.getAllTickets(), HttpStatus.OK);
 	}
 	
 	@GetMapping("/user/{username}")
