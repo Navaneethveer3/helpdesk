@@ -5,3 +5,14 @@
 - Ticket creation.
 - Ticket resolving with AI.
 - Stores the user conversation.
+- Document querying.
+- Q & A chat window.
+
+**Architecture :**
+
+**Frontend :**
+- **React.js :** provides intereactive, lag-free UI to the user.
+
+**Backend :**
+- **Spring Boot :** gives enterprise level development support with auto-configuration.
+- **Spring AI :** provides AI support AI driven backend for enterprise grade backend systems.
