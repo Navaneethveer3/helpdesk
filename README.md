@@ -17,3 +17,4 @@
 - **Spring Boot :** gives enterprise level development support with auto-configuration.
 - **Spring AI :** provides AI support AI driven backend for enterprise grade backend systems.
 - **JUnit :** helps to test the code and the endpoints.
+- **Gemma 4 :** it is an open-source LLM model that helps to work with the data.
