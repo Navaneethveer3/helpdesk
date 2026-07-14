@@ -14,6 +14,20 @@ const ChatbotWindow = ({ userId = 'defaultUser' }) => {
   const [isThinking, setIsThinking] = useState(false);
   const fileInputRef = useRef(null);
   const messagesEndRef = useRef(null);
+  const textareaRef = useRef(null);
+
+  const adjustTextareaHeight = () => {
+    const textarea = textareaRef.current;
+    if (textarea) {
+      textarea.style.height = 'auto';
+      // Max height 200px before scrolling
+      textarea.style.height = `${Math.min(textarea.scrollHeight, 200)}px`;
+    }
+  };
+
+  useEffect(() => {
+    adjustTextareaHeight();
+  }, [input]);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -31,18 +45,18 @@ const ChatbotWindow = ({ userId = 'defaultUser' }) => {
   };
 
   const handleSend = async (e) => {
-    e.preventDefault();
+    if (e && e.preventDefault) e.preventDefault();
     if (!input.trim() && !attachedFile) return;
 
     const userMessage = input.trim() || 'Please process this document.';
     const currentFile = attachedFile;
-    
+
     // Optimistic UI update
     setMessages(prev => [
-      ...prev, 
+      ...prev,
       { role: 'user', content: currentFile ? `[Attached: ${currentFile.name}] ${userMessage}` : userMessage }
     ]);
-    
+
     setInput('');
     setAttachedFile(null);
     setIsGenerating(true);
@@ -53,12 +67,12 @@ const ChatbotWindow = ({ userId = 'defaultUser' }) => {
         // Upload document first
         await aiService.uploadDocument(currentFile);
       }
-      
+
       // Add empty system message placeholder for the stream
       setMessages(prev => [...prev, { role: 'system', content: '' }]);
 
       const promptToSend = currentFile ? `[Attached: ${currentFile.name}] ${userMessage}` : userMessage;
-      
+
       await aiService.chatStream(promptToSend, userId, (chunk) => {
         setIsThinking(false); // Hide thinking dots when data arrives
         setMessages(prev => {
@@ -79,6 +93,14 @@ const ChatbotWindow = ({ userId = 'defaultUser' }) => {
       setIsGenerating(false);
       setIsThinking(false);
       if (fileInputRef.current) fileInputRef.current.value = '';
+      if (textareaRef.current) textareaRef.current.style.height = 'auto';
+    }
+  };
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSend(e);
     }
   };
 
@@ -129,33 +151,42 @@ const ChatbotWindow = ({ userId = 'defaultUser' }) => {
           </div>
         )}
         <form onSubmit={handleSend} className="chat-input-form">
-          
-          <button 
-            type="button" 
-            className="attach-btn" 
+
+          <button
+            type="button"
+            className="attach-btn"
             onClick={() => fileInputRef.current?.click()}
             disabled={isGenerating}
             title="Attach Document"
           >
             <Paperclip size={20} />
           </button>
-          
-          <input 
-            type="file" 
+
+          <input
+            type="file"
             ref={fileInputRef}
             style={{ display: 'none' }}
             onChange={handleFileChange}
           />
 
-          <input
-            type="text"
+          <textarea
+            ref={textareaRef}
             className="user-input"
-            placeholder="Type your message here..."
+            placeholder="Type your message here... "
             value={input}
             onChange={(e) => setInput(e.target.value)}
+            onKeyDown={handleKeyDown}
             disabled={isGenerating}
+            rows={1}
+            style={{
+              resize: 'none',
+              overflowY: 'auto',
+              minHeight: '24px',
+              paddingTop: '4px',
+              paddingBottom: '4px'
+            }}
           />
-          
+
           <button type="submit" className="send-btn" disabled={isGenerating || (!input.trim() && !attachedFile)}>
             <Send size={18} style={{ marginLeft: '-2px' }} />
           </button>

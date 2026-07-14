@@ -1,6 +1,9 @@
 package com.project.helpdesk.service;
 
+import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,27 +26,25 @@ public class TicketService {
 		return ticketRepo.save(ticket);
 	}
 
-	public Ticket getTicketById(Long ticketId) {
+	public Ticket getTicketById(UUID ticketId) {
 		return ticketRepo.findById(ticketId).orElse(null);
 	}
 	
-	public Iterable<Ticket> getAllTickets() {
+	public List<Ticket> getAllTickets() {
 		return ticketRepo.findAll();
 	}
 
-	public Ticket getTicketByUsername(String username) {
+	public List<Ticket> getTicketByUsername(String username) {
 		return ticketRepo.findByUsername(username).orElse(null);
 	}
 
-	public Ticket updateTicket(Ticket newTicket, Long ticketId) throws Exception {
+	public Ticket updateTicket(Ticket newTicket, UUID ticketId) throws Exception {
 		var curTicket = ticketRepo.findById(ticketId);
 		if (curTicket.isEmpty()) {
 			throw new Exception("Ticket does not exists");
 		}
 		Ticket ticket = curTicket.get();
-		if(newTicket.getUpdatedOn()!=null) {
-			ticket.setUpdatedOn(newTicket.getUpdatedOn());
-		}
+		ticket.setUpdatedOn(LocalDateTime.now());
 		if(newTicket.getCreatedOn()!=null) {
 			ticket.setCreatedOn(newTicket.getCreatedOn());
 		}
@@ -59,7 +60,7 @@ public class TicketService {
 		return ticketRepo.save(ticket);
 	}
 
-	public void deleteTicket(Long id) throws Exception {
+	public void deleteTicket(UUID id) throws Exception {
 		Optional<Ticket> ticket = ticketRepo.findById(id);
 		if (ticket.isEmpty()) {
 			throw new Exception("Ticket doesn't exist");
