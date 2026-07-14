@@ -2,6 +2,9 @@ package com.project.helpdesk;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.util.List;
+import java.util.UUID;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -27,7 +30,7 @@ class TicketServiceTests {
 		ticket.setStatus(Status.OPEN);
 		
 		
-		long id = this.ticketService.createTicket(ticket).getId();
+		UUID id = this.ticketService.createTicket(ticket).getId();
 		
 		Ticket expectedTicket = this.ticketService.getTicketById(id);
 		assertEquals(ticket.getUsername(), expectedTicket.getUsername());
@@ -37,9 +40,9 @@ class TicketServiceTests {
 	
 	@Test
 	void getTicketByUsername() {
-		Ticket ticket1 = this.ticketService.getTicketByUsername("Tester");
-		Ticket ticket2 = this.ticketService.getTicketByUsername("Unit Tester");
-		Ticket ticket3 = this.ticketService.getTicketByUsername("Developer");
+		List<Ticket> ticket1 = this.ticketService.getTicketByUsername("Tester");
+		List<Ticket> ticket2 = this.ticketService.getTicketByUsername("Unit Tester");
+		List<Ticket> ticket3 = this.ticketService.getTicketByUsername("Developer");
 		assertNotNull(ticket1);
 		assertNotNull(ticket2);
 		assertNull(ticket3);

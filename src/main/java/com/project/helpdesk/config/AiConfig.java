@@ -9,8 +9,10 @@ import org.springframework.ai.chat.client.advisor.vectorstore.QuestionAnswerAdvi
 import org.springframework.ai.chat.memory.ChatMemory;
 import org.springframework.ai.chat.memory.MessageWindowChatMemory;
 import org.springframework.ai.chat.memory.repository.jdbc.JdbcChatMemoryRepository;
+import org.springframework.ai.model.tool.ToolCallingManager;
 import org.springframework.ai.rag.advisor.RetrievalAugmentationAdvisor;
 import org.springframework.ai.rag.retrieval.search.VectorStoreDocumentRetriever;
+import org.springframework.ai.tool.ToolCallbackProvider;
 import org.springframework.ai.tool.toolsearch.ToolIndex;
 import org.springframework.ai.tool.toolsearch.index.vectorstore.VectorToolIndex;
 import org.springframework.ai.vectorstore.SearchRequest;
@@ -26,6 +28,14 @@ import com.project.helpdesk.tools.TicketDatabaseTool;
 public class AiConfig {
 
 	@Bean
+	ToolSearchToolCallingAdvisor toolSearchAdvisor(ToolIndex toolIndex, ToolCallingManager toolCallingManager) {
+		return ToolSearchToolCallingAdvisor.builder()
+				.toolIndex(toolIndex)
+				.toolCallingManager(toolCallingManager)
+				.build();
+	}
+	
+	@Bean
 	ToolIndex toolIndex(VectorStore vectorStore) {
 		return new VectorToolIndex(vectorStore);
 	}
@@ -34,17 +44,18 @@ public class AiConfig {
 	ChatMemory chatMemory(JdbcChatMemoryRepository jdbcChatMemoryRepository) {
 		return MessageWindowChatMemory.builder()
 				.chatMemoryRepository(jdbcChatMemoryRepository)
-				.maxMessages(10)
+				.maxMessages(20)
 				.build();
 	}
 
 	@Bean
 	public ChatClient chatClient(ChatClient.Builder builder, ChatMemory chatMemory, VectorStore vectorStore,
-			ToolIndex toolIndex, TicketDatabaseTool ticketDatabaseTool, KnowledgeBaseTool knowledgeBaseTool) {
+			ToolIndex toolIndex, TicketDatabaseTool ticketDatabaseTool, KnowledgeBaseTool knowledgeBaseTool, ToolCallingManager toolCallingManager) {
 
 		Advisor smartToolAdvisor = ToolSearchToolCallingAdvisor.builder()
 				.toolIndex(toolIndex)
-				.maxResults(2)
+				.toolCallingManager(toolCallingManager)
+				.maxResults(5)
 				.build();
 
 		// Advisor qaAdvisor = QuestionAnswerAdvisor.builder(vectorStore)

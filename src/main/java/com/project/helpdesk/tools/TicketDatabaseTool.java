@@ -1,48 +1,61 @@
 package com.project.helpdesk.tools;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import org.springframework.ai.tool.annotation.Tool;
 import org.springframework.ai.tool.annotation.ToolParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.project.helpdesk.models.Priority;
 import com.project.helpdesk.models.Ticket;
 import com.project.helpdesk.service.TicketService;
 
 @Component
 public class TicketDatabaseTool {
-	
-	@Autowired
+
 	private TicketService ticketService;
-	
-	@Tool
-	public Ticket createTicket(@ToolParam(description="Ticket details.") Ticket ticket) {
+
+	TicketDatabaseTool(TicketService ticketService) {
+		this.ticketService = ticketService;
+	}
+
+	@Tool(description = "create a ticket. Only the summary will be given by the user and remaining details need to be assigned by you based on the information given by the user.")
+	public Ticket createTicket(@ToolParam(description = "Ticket summary") String summary,
+			@ToolParam(description = "Ticket Priority", required = false) Priority priority,
+			@ToolParam(description = "username of the user") String username) {
+		Ticket ticket = new Ticket();
+		ticket.setSummary(summary);
+		ticket.setPriority(priority);
+		ticket.setUsername(username);
 		return ticketService.createTicket(ticket);
 	}
-	
-	@Tool
-	public Ticket getTicketByUsername(String username) {
+
+	@Tool(description = "get ticket by username")
+	public List<Ticket> getTicketByUsername(String username) {
 		return ticketService.getTicketByUsername(username);
 	}
-	
-	@Tool
-	public Ticket getTicketById(Long id) {
+
+	@Tool(description = "get ticket by id")
+	public Ticket getTicketById(UUID id) {
 		return ticketService.getTicketById(id);
 	}
-	
-	@Tool
-	public Ticket updateTicket(Ticket ticket) throws Exception {
-		long id = ticketService.getTicketByUsername(ticket.getUsername()).getId();
+
+	@Tool(description = "update ticket")
+	public Ticket updateTicket(@ToolParam(description="Ticket summary") String summary, UUID id) throws Exception {
+		Ticket ticket = new Ticket();
+		ticket.setSummary(summary);
 		return ticketService.updateTicket(ticket, id);
 	}
-	
-	@Tool
-	public void deleteTicket(Long id) throws Exception{
+
+	@Tool(description = "delete ticket")
+	public void deleteTicket(UUID id) throws Exception {
 		ticketService.deleteTicket(id);
 	}
-	
-	@Tool
+
+	@Tool(description = "get current time")
 	public String getCurrentTime() {
 		return String.valueOf(System.currentTimeMillis());
 	}

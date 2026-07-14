@@ -1,6 +1,7 @@
 package com.project.helpdesk.models;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -14,8 +15,8 @@ import lombok.*;
 public class Ticket {
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	private Long id;
+	@GeneratedValue(strategy=GenerationType.UUID)
+	private UUID id;
 	
 	@Lob
 	private String summary;
@@ -23,7 +24,7 @@ public class Ticket {
 	@Enumerated(EnumType.STRING)
 	private Priority priority;
 	
-	@Column(unique=true)
+	
 	private String username;
 	
 	private LocalDateTime createdOn;
@@ -45,11 +46,11 @@ public class Ticket {
 		this.updatedOn = LocalDateTime.now();
 	}
 
-	public Long getId() {
+	public UUID getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(UUID id) {
 		this.id = id;
 	}
 

@@ -6,7 +6,7 @@
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
 		<version>4.0.6</version>
-		<relativePath/> <!-- lookup parent from repository -->
+		<relativePath/> 
 	</parent>
 	<groupId>com.project</groupId>
 	<artifactId>helpdesk</artifactId>
@@ -136,6 +136,7 @@
 							<goal>compile</goal>
 						</goals>
 						<configuration>
+							<parameters>true</parameters>
 							<annotationProcessorPaths>
 								<path>
 									<groupId>org.projectlombok</groupId>
@@ -151,6 +152,7 @@
 							<goal>testCompile</goal>
 						</goals>
 						<configuration>
+							<parameters>true</parameters>
 							<annotationProcessorPaths>
 								<path>
 									<groupId>org.projectlombok</groupId>
