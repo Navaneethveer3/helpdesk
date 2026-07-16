@@ -4,14 +4,13 @@ import { X } from 'lucide-react';
 const NewTicketModal = ({ onClose, onSubmit }) => {
   const [formData, setFormData] = useState({
     summary: '',
-    priority: 'LOW',
-    username: ''
+    priority: 'LOW'
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.summary || !formData.username) return;
+    if (!formData.summary) return;
     
     setIsSubmitting(true);
     try {
@@ -19,7 +18,7 @@ const NewTicketModal = ({ onClose, onSubmit }) => {
       onClose();
     } catch (err) {
       console.error(err);
-      alert('Failed to create ticket. Username might be duplicate.');
+      alert('Failed to create ticket.');
     } finally {
       setIsSubmitting(false);
     }
@@ -36,16 +35,6 @@ const NewTicketModal = ({ onClose, onSubmit }) => {
         </div>
         
         <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label>Username</label>
-            <input 
-              type="text" 
-              required 
-              placeholder="e.g. jdoe123"
-              value={formData.username}
-              onChange={e => setFormData({...formData, username: e.target.value})}
-            />
-          </div>
           
           <div className="form-group">
             <label>Priority</label>

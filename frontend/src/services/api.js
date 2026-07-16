@@ -7,6 +7,12 @@ export const ticketService = {
     return response.json();
   },
 
+  getTicketsByUsername: async (username) => {
+    const response = await fetch(`${API_BASE_URL}/user/${encodeURIComponent(username)}`);
+    if (!response.ok) throw new Error('Failed to fetch tickets for user');
+    return response.json();
+  },
+
   getTicketById: async (id) => {
     const response = await fetch(`${API_BASE_URL}/id/${id}`);
     if (!response.ok) throw new Error('Failed to fetch ticket');
@@ -43,6 +49,14 @@ export const ticketService = {
     });
     if (!response.ok) throw new Error('Failed to delete ticket');
     return response.text();
+  },
+
+  resolveTicket: async (id, solution) => {
+    const response = await fetch(`${API_BASE_URL}/support/resolve/${id}?solution=${encodeURIComponent(solution)}`, {
+      method: 'POST'
+    });
+    if (!response.ok) throw new Error('Failed to resolve ticket');
+    return response.json();
   }
 };
 

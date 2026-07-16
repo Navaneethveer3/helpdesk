@@ -24,8 +24,9 @@ public class Ticket {
 	@Enumerated(EnumType.STRING)
 	private Priority priority;
 	
-	
 	private String username;
+	
+	private String solution;
 	
 	private LocalDateTime createdOn;
 	private LocalDateTime updatedOn;
@@ -100,6 +101,14 @@ public class Ticket {
 
 	public void setStatus(Status status) {
 		this.status = status;
+	}
+
+	public String getSolution() {
+		return solution;
+	}
+
+	public void setSolution(String solution) {
+		this.solution = solution;
 	}
 	
 	
