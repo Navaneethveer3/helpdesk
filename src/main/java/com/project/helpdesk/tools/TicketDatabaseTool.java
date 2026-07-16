@@ -3,9 +3,13 @@ package com.project.helpdesk.tools;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
+import org.springframework.ai.document.Document;
 import org.springframework.ai.tool.annotation.Tool;
 import org.springframework.ai.tool.annotation.ToolParam;
+import org.springframework.ai.vectorstore.SearchRequest;
+import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -18,14 +22,20 @@ public class TicketDatabaseTool {
 
 	private TicketService ticketService;
 
-	TicketDatabaseTool(TicketService ticketService) {
+	private VectorStore vectorStore;
+	
+	TicketDatabaseTool(TicketService ticketService, VectorStore vectorStore) {
 		this.ticketService = ticketService;
+		this.vectorStore = vectorStore;
 	}
 
-	@Tool(description = "create a ticket. Only the summary will be given by the user and remaining details need to be assigned by you based on the information given by the user.")
+	@Tool(description = "create a ticket. Only the summary will be given by the user and extract the summary clearly without any punctuation marks."
+			+ " After successful creation show the complete ticket details to the user."
+			+ "Before creating the ticket first search for the similar tickets from the DB."
+			+ "If you find more similar tickets try to suggest the fix based on the previous solution don't create the ticket until the user forces or tells the provided solution does not work")
 	public Ticket createTicket(@ToolParam(description = "Ticket summary") String summary,
-			@ToolParam(description = "Ticket Priority", required = false) Priority priority,
-			@ToolParam(description = "username of the user") String username) {
+			@ToolParam(description = "Ticket Priority need to be assigned by you based on summary", required = true) Priority priority,
+			@ToolParam(description = "username of the user") String username, @ToolParam(description="it will be given by the support agent", required=false) String solution) {
 		Ticket ticket = new Ticket();
 		ticket.setSummary(summary);
 		ticket.setPriority(priority);
@@ -55,8 +65,26 @@ public class TicketDatabaseTool {
 		ticketService.deleteTicket(id);
 	}
 
+	@Tool(description = "search for tickets with similar issues")
+	public String getSimilarTickets(@ToolParam(description="summary of the ticket") String query) {
+		List<Document> result = vectorStore.similaritySearch(
+				SearchRequest.builder()
+				.query(query)
+				.topK(3)
+				.build()
+				);
+		if(result==null || result.isEmpty()) {
+			return "No tickets found!";
+		}
+		return result.stream().map(
+				doc->doc.getText()
+				).collect(Collectors.joining("\n\n---\n\n"));
+	}
+	
 	@Tool(description = "get current time")
 	public String getCurrentTime() {
 		return String.valueOf(System.currentTimeMillis());
 	}
+	
+	
 }
