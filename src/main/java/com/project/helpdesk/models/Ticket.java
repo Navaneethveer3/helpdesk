@@ -26,6 +26,7 @@ public class Ticket {
 	
 	private String username;
 	
+	@Lob
 	private String solution;
 	
 	private LocalDateTime createdOn;
