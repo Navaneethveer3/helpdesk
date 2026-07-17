@@ -6,9 +6,11 @@ import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import com.project.helpdesk.models.Status;
+import com.project.helpdesk.models.SupportServiceEvent;
 import com.project.helpdesk.models.Ticket;
 import com.project.helpdesk.repository.TicketRepo;
 
@@ -21,9 +23,14 @@ public class TicketService {
 	@Autowired
 	private TicketRepo ticketRepo;
 
+	@Autowired
+	ApplicationEventPublisher eventPublisher;
+	
 	public Ticket createTicket(Ticket ticket) {
 		ticket.setStatus(Status.OPEN);
-		return ticketRepo.save(ticket);
+		Ticket savedTicket = ticketRepo.save(ticket);
+		eventPublisher.publishEvent(new SupportServiceEvent(savedTicket, ticket.getUsername()));
+		return savedTicket;
 	}
 
 	public Ticket getTicketById(UUID ticketId) {

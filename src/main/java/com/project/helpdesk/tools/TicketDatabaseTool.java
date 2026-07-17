@@ -32,9 +32,10 @@ public class TicketDatabaseTool {
 	@Tool(description = "create a ticket. Only the summary will be given by the user and extract the summary clearly without any punctuation marks."
 			+ " After successful creation show the complete ticket details to the user."
 			+ "Before creating the ticket first search for the similar tickets from the DB."
-			+ "If you find more similar tickets try to suggest the fix based on the previous solution don't create the ticket until the user forces or tells the provided solution does not work")
+			+ "If you find more similar tickets try to suggest the fix based on the previous solution don't create the ticket until the user forces or tells the provided solution does not work"
+			+ "Ticket priority needs to be assigned by you based on the summary")
 	public Ticket createTicket(@ToolParam(description = "Ticket summary") String summary,
-			@ToolParam(description = "Ticket Priority need to be assigned by you based on summary", required = true) Priority priority,
+			@ToolParam(description = "Ticket Priority") Priority priority,
 			@ToolParam(description = "username of the user") String username, @ToolParam(description="it will be given by the support agent", required=false) String solution) {
 		Ticket ticket = new Ticket();
 		ticket.setSummary(summary);
