@@ -1,30 +1,21 @@
 import React from 'react';
-import { MessageSquare } from 'lucide-react';
+import { MessageSquare, LayoutDashboard, Ticket as TicketIcon } from 'lucide-react';
 
-const Sidebar = ({ tickets, activeTicketId, onSelectTicket, viewFilter, onViewFilterChange }) => {
+const Sidebar = ({ tickets, activeTicketId, onSelectTicket }) => {
   return (
     <div className="sidebar">
-      <div className="sidebar-header" style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-        <h3 style={{ fontSize: '1rem', fontWeight: '600', color: 'var(--text-secondary)', margin: 0 }}>
-          Tickets
-        </h3>
-        <div style={{ display: 'flex', gap: '8px' }}>
-          <button 
-            className={`btn-icon ${viewFilter === 'mine' ? 'btn-primary' : ''}`}
-            onClick={() => onViewFilterChange('mine')}
-            style={{ flex: 1, justifyContent: 'center', fontSize: '0.8rem', padding: '6px' }}
-          >My Tickets</button>
-          <button 
-            className={`btn-icon ${viewFilter === 'all' ? 'btn-primary' : ''}`}
-            onClick={() => onViewFilterChange('all')}
-            style={{ flex: 1, justifyContent: 'center', fontSize: '0.8rem', padding: '6px' }}
-          >All Tickets</button>
+      <div className="sidebar-header">
+        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          <LayoutDashboard size={24} color="var(--primary-color)" />
+          <h3 style={{ fontSize: '1.2rem', fontWeight: '700', color: 'var(--text-primary)', margin: 0, letterSpacing: '-0.02em' }}>
+            My Tickets
+          </h3>
         </div>
       </div>
       <div className="ticket-list">
         {tickets.length === 0 ? (
-          <div style={{ textAlign: 'center', color: 'var(--text-secondary)', padding: '20px' }}>
-            No chats yet
+          <div style={{ textAlign: 'center', color: 'var(--text-muted)', padding: '30px 20px', fontSize: '0.95rem' }}>
+            No tickets found
           </div>
         ) : (
           tickets.map((ticket) => (
@@ -32,11 +23,25 @@ const Sidebar = ({ tickets, activeTicketId, onSelectTicket, viewFilter, onViewFi
               key={ticket.id}
               className={`ticket-item ${activeTicketId === ticket.id ? 'active' : ''}`}
               onClick={() => onSelectTicket(ticket)}
-              style={{ display: 'flex', alignItems: 'center', gap: '8px' }}
             >
-              <MessageSquare size={16} />
-              <div style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                {ticket.username}'s Issue
+              <div style={{
+                background: activeTicketId === ticket.id ? 'var(--primary-color)' : 'rgba(255,255,255,0.05)',
+                padding: '10px',
+                borderRadius: '12px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: activeTicketId === ticket.id ? 'white' : 'var(--primary-color)'
+              }}>
+                <TicketIcon size={18} />
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
+                <span style={{ fontWeight: '600', color: activeTicketId === ticket.id ? 'var(--text-primary)' : 'var(--text-secondary)', whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}>
+                  {ticket.summary}
+                </span>
+                <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', marginTop: '2px' }}>
+                  By {ticket.username}
+                </span>
               </div>
             </div>
           ))
