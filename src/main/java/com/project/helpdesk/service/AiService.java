@@ -16,16 +16,21 @@ public class AiService {
 	@Autowired
 	private ChatClient chatClient;
 
+	@Autowired
+	private PromptConversionService promptConversionService;
+	
 	@Value("classpath:/prompts/system")
 	private Resource systemPrompt;
 
 	public Flux<String> getResponseFromAssistant(String query, String userId) {
 		
+		String prompt = promptConversionService.convertPrompt(query);
+		
 		return this.chatClient
 				.prompt()
 				.system(system->system.text(this.systemPrompt).param("userId", userId))
 				.advisors(a->a.param(ChatMemory.CONVERSATION_ID, userId))
-				.user(user -> user.text(query))
+				.user(user -> user.text(prompt))
 				.stream()
 				.content();
 	}
