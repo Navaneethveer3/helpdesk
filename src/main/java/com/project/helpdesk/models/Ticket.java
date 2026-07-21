@@ -33,6 +33,9 @@ public class Ticket {
 	private LocalDateTime updatedOn;
 	
 	@Enumerated(EnumType.STRING)
+	private Category category;
+	
+	@Enumerated(EnumType.STRING)
 	private Status status;
 	
 	@PrePersist
@@ -110,6 +113,14 @@ public class Ticket {
 
 	public void setSolution(String solution) {
 		this.solution = solution;
+	}
+
+	public Category getCategory() {
+		return category;
+	}
+
+	public void setCategory(Category category) {
+		this.category = category;
 	}
 	
 	
