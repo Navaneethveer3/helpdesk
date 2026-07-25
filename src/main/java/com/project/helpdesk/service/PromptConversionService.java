@@ -29,7 +29,7 @@ public class PromptConversionService {
 		String wrappedQuery = "Rewrite the following user query into a detailed prompt. DO NOT answer the query itself. Make the prompt very short but meaninigful and convert the prompt to a big one only if it seems to be needed big response. Only output the rewritten prompt.\n\nUser query: " + query + "\n\nYour output:";
 		return chatClient
 				.prompt()
-				.options(ChatOptions.builder().model("phi-3-mini-4k-instruct"))
+				.options(ChatOptions.builder().model("qwen2.5-0.5b-instruct"))
 				.system(this.systemPrompt)
 				.user(user->user.text(wrappedQuery))
 				.call()

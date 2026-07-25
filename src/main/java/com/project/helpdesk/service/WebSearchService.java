@@ -4,6 +4,8 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -14,6 +16,8 @@ import java.util.*;
 @Service
 public class WebSearchService {
 	
+	@Autowired
+	private DocumentReaderService docReaderService;
 	
 	public List<String> getUrlsFromSearchEngine(String query){
 		WebClient webClient = WebClient.create("https://www.searchapi.io");
@@ -82,4 +86,23 @@ public class WebSearchService {
 		}
 		return extractedSites;
 	}
+	
+	public void webSearch(String query){
+		List<String> urls = getUrlsFromSearchEngine(query);
+		for(String url : urls) {
+			List<String> info = this.crawlAndExtract(url, 1);
+			for(String in : info) {
+				Resource resource = new org.springframework.core.io.ByteArrayResource(in.getBytes(java.nio.charset.StandardCharsets.UTF_8)){
+					@Override
+					public String getFilename() {
+						// Clean the query to be a safe filename, just in case
+						String safeQuery = query.replaceAll("[^a-zA-Z0-9\\s]", "_");
+						return safeQuery + ".txt";
+					}
+				};
+				this.docReaderService.loadDocument(resource);
+			}
+		}
+	}
+	
 }
