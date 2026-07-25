@@ -23,6 +23,7 @@ import org.springframework.context.annotation.Configuration;
 
 import com.project.helpdesk.tools.KnowledgeBaseTool;
 import com.project.helpdesk.tools.TicketDatabaseTool;
+import com.project.helpdesk.tools.WebSearchTools;
 
 @Configuration
 public class AiConfig {
@@ -50,7 +51,8 @@ public class AiConfig {
 
 	@Bean
 	public ChatClient chatClient(ChatClient.Builder builder, ChatMemory chatMemory, VectorStore vectorStore,
-			ToolIndex toolIndex, TicketDatabaseTool ticketDatabaseTool, KnowledgeBaseTool knowledgeBaseTool, ToolCallingManager toolCallingManager) {
+			ToolIndex toolIndex, TicketDatabaseTool ticketDatabaseTool, KnowledgeBaseTool knowledgeBaseTool, ToolCallingManager toolCallingManager,
+			WebSearchTools webSearchTool) {
 
 		Advisor smartToolAdvisor = ToolSearchToolCallingAdvisor.builder()
 				.toolIndex(toolIndex)
@@ -63,7 +65,7 @@ public class AiConfig {
 		// .build();
 
 		return builder
-				.defaultTools(ticketDatabaseTool, knowledgeBaseTool)
+				.defaultTools(ticketDatabaseTool, knowledgeBaseTool, webSearchTool)
 				.defaultAdvisors(MessageChatMemoryAdvisor.builder(chatMemory).build(), new SimpleLoggerAdvisor(), smartToolAdvisor)
 				.build();
 	}
