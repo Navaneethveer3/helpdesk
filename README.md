@@ -17,10 +17,13 @@ token-by-token responses.
 
 
 **Frontend :**
-- **React.js :** provides intereactive, lag-free UI to the user.
+- **React.js :** provides interactive, lag-free UI to the user.
 
 **Backend :**
 - **Spring Boot :** gives enterprise level development support with auto-configuration.
 - **Spring AI :** provides AI support AI driven backend for enterprise grade backend systems.
 - **JUnit :** helps to test the code and the endpoints.
 - **Gemma 4 :** it is an open-source LLM model that helps to work with the data.
+
+**Database :**
+- **PostgreSQL** : provides reliability and persistence of the data.
