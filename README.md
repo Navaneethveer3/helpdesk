@@ -13,7 +13,7 @@ token-by-token responses.
 
 **Architecture :**
 
-<img width="1762" height="589" alt="image" src="https://github.com/user-attachments/assets/dcf97045-b027-474f-a2e3-627166a1edcc" />
+<img width="1864" height="611" alt="image" src="https://github.com/user-attachments/assets/404ed88c-7440-4726-90a0-1c3ca3ab3727" />
 
 
 **Frontend :**
