@@ -13,6 +13,9 @@ token-by-token responses.
 
 **Architecture :**
 
+<img width="1762" height="589" alt="image" src="https://github.com/user-attachments/assets/dcf97045-b027-474f-a2e3-627166a1edcc" />
+
+
 **Frontend :**
 - **React.js :** provides intereactive, lag-free UI to the user.
 
