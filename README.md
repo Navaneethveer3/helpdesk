@@ -1,5 +1,6 @@
-**AI Based Helpdesk**
-The Al-Powered Helpdesk is a full-stack support-ticket platform in which an LLM agent handles the support workflow end to end not just answering questions, but autonomously triaging, resolving, and learning from tickets with no human in the loop by default. It pairs a Spring Boot/Spring Al backend with a React front end, PostgreSQL + pgvector for storage and retrieval, and a locally hosted LLM (Gemma, served through LM Studio).
+**Overview :**
+<br/>
+The AI-Powered Helpdesk is a full-stack support-ticket platform in which an LLM agent handles the support workflow end to end not just answering questions, but autonomously triaging, resolving, and learning from tickets with no human in the loop by default. It pairs a Spring Boot/Spring Al backend with a React front end, PostgreSQL + pgvector for storage and retrieval, and a locally hosted LLM (Gemma, served through LM Studio). <br/>
 The core idea that differentiates this from a typical "chatbot over a database" project is closed-loop automation: when a ticket is created, an independent Al agent is dispatched asynchronously to resolve it; when it resolves a ticket, that resolution is embedded back into the knowledge base so the next similar ticket is answered from real historical fixes. The system also exposes a conversational assistant, document ingestion (RAG), and live web research as agent-callable tools, with dynamic tool discovery so the model isn't overloaded with irrelevant tool schemas.
 
 **Core Features :**
@@ -15,6 +16,10 @@ token-by-token responses.
 **Architecture :**
 
 <img width="1864" height="611" alt="image" src="https://github.com/user-attachments/assets/404ed88c-7440-4726-90a0-1c3ca3ab3727" />
+
+**Technology Stack :** <br/>
+
+<img width="675" height="395" alt="image" src="https://github.com/user-attachments/assets/3c564834-4b8d-4774-88b4-33521224bef6" />
 
 
 **Frontend :**
