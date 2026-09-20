@@ -11,7 +11,7 @@ const NewTicketModal = ({ onClose, onSubmit }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!formData.summary) return;
-    
+
     setIsSubmitting(true);
     try {
       await onSubmit(formData);
@@ -38,33 +38,33 @@ const NewTicketModal = ({ onClose, onSubmit }) => {
             <X size={20} />
           </button>
         </div>
-        
+
         <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-          
+
           <div className="form-group" style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
             <label style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', fontWeight: '600' }}>Priority Level</label>
-            <select 
+            <select
               value={formData.priority}
-              onChange={e => setFormData({...formData, priority: e.target.value})}
+              onChange={e => setFormData({ ...formData, priority: e.target.value })}
               style={{ width: '100%' }}
             >
               <option value="LOW">Low - General query or minor issue</option>
-              <option value="NORMAL">Normal - Feature not working as expected</option>
+              <option value="MEDIUM">Normal - Feature not working as expected</option>
               <option value="HIGH">High - System failure or major bug</option>
             </select>
           </div>
-          
+
           <div className="form-group" style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
             <label style={{ fontSize: '0.9rem', color: 'var(--text-secondary)', fontWeight: '600' }}>Issue Description</label>
-            <textarea 
-              required 
+            <textarea
+              required
               placeholder="Describe the issue in detail. What happened? What did you expect to happen?"
               value={formData.summary}
-              onChange={e => setFormData({...formData, summary: e.target.value})}
+              onChange={e => setFormData({ ...formData, summary: e.target.value })}
               style={{ minHeight: '120px', resize: 'vertical', width: '100%' }}
             />
           </div>
-          
+
           <div style={{ display: 'flex', gap: '16px', justifyContent: 'flex-end', marginTop: '16px' }}>
             <button type="button" className="btn-icon" onClick={onClose} disabled={isSubmitting}>
               Cancel
