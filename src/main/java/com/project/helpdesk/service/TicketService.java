@@ -29,7 +29,7 @@ public class TicketService {
 	public Ticket createTicket(Ticket ticket) {
 		ticket.setStatus(Status.OPEN);
 		Ticket savedTicket = ticketRepo.save(ticket);
-		eventPublisher.publishEvent(new SupportServiceEvent(savedTicket, ticket.getUsername()));
+//		eventPublisher.publishEvent(new SupportServiceEvent(savedTicket, ticket.getUsername()));
 		return savedTicket;
 	}
 
