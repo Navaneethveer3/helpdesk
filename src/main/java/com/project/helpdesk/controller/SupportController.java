@@ -1,6 +1,7 @@
 package com.project.helpdesk.controller;
 
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.project.helpdesk.models.ResolvedTickets;
 import com.project.helpdesk.models.Ticket;
 import com.project.helpdesk.service.SupportService;
 
@@ -29,4 +31,10 @@ public class SupportController {
 	public ResponseEntity<Ticket> resolveTicket(@PathVariable UUID id, @RequestParam String solution){
 		return new ResponseEntity<>(supportService.resolveTicket(id, solution),HttpStatus.OK);
 	}
+	
+	@GetMapping("/resolve/tickets")
+	public ResponseEntity<List<ResolvedTickets>> getAllTickets(){
+		return new ResponseEntity<>(supportService.getAllTickets(),HttpStatus.OK);
+	}
+	
 }

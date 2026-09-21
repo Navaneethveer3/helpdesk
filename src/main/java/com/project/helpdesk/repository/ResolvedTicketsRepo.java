@@ -9,5 +9,5 @@ import com.project.helpdesk.models.ResolvedTickets;
 
 @Repository
 public interface ResolvedTicketsRepo extends JpaRepository<ResolvedTickets, Integer> {
-
+	
 }
