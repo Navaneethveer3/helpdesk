@@ -38,7 +38,7 @@ class TicketControllerTests {
 	@Test
 	public void testCreateTicket() throws Exception{
 		Ticket ticket = new Ticket();
-		ticket.setSummary("Login issue");
+		ticket.setSummary("Login issue created today");
 		ticket.setUsername("tester");
 		ticket.setCategory(Category.Software);
 		mockMvc.perform(post("/ticket/create")

@@ -26,6 +26,10 @@ public class Ticket {
 	
 	private String username;
 	
+	@ManyToOne
+	@JoinColumn(name = "user_tickets")
+	private Users user;
+	
 	@Lob
 	private String solution;
 	
